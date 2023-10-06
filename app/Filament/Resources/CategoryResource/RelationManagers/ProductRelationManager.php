@@ -58,6 +58,7 @@ class ProductRelationManager extends RelationManager
                     ->label('Название'),
                 Tables\Columns\TextColumn::make('price')
                     ->money('RUB')
+                    ->sortable()
                     ->label('Стоимость'),
                 Tables\Columns\ImageColumn::make('image_path')
                     ->label('Изображение')

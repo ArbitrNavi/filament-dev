@@ -80,7 +80,26 @@ class ProductResource extends Resource
                 Tables\Filters\SelectFilter::make('category_id')
                     ->label('Категория')
                     ->preload()
+                    ->searchable()
                     ->options(Category::query()->where('is_active', 1)->pluck('title', 'id')),
+                Tables\Filters\Filter::make('price')
+                    ->form([
+                        Forms\Components\TextInput::make('from_price')
+                            ->label('От'),
+                        Forms\Components\TextInput::make('to_price')
+                            ->label('До')
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        return $query
+                            ->when(
+                                $data['from_price'],
+                                fn (Builder $query, $data): Builder => $query->where('price', '>=', $data)
+                            )
+                            ->when(
+                                $data['to_price'],
+                                fn (Builder $query, $data): Builder => $query->where('price', '<=', $data)
+                            );
+                    })
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -91,14 +110,14 @@ class ProductResource extends Resource
                 ]),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
 
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -106,5 +125,5 @@ class ProductResource extends Resource
             'create' => Pages\CreateProduct::route('/create'),
             'edit' => Pages\EditProduct::route('/{record}/edit'),
         ];
-    }    
+    }
 }

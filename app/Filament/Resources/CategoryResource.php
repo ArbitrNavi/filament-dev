@@ -33,7 +33,7 @@ class CategoryResource extends Resource
                     ->integer()
                     ->required(),
                 Forms\Components\Toggle::make('is_active')
-                    ->label('Активность')
+                    ->label('Активность'),
             ]);
     }
 
